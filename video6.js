@@ -20,17 +20,28 @@ function draw() {
 
 function mouseClicked()
 {
-    for (let i = 0; i < charges.length; i++) 
-    {
-        charges[i].selected = false;
-    }
-    
+    deselectCharges()
+}
+
+
+function doubleClicked()
+{
+    deselectCharges()
+
     if (!selectACharge()) 
     {
         charges.push(new Charge(mouseX, mouseY, +5))
     }
 }
 
+
+function deselectCharges()
+{
+    for (let i = 0; i < charges.length; i++) 
+    {
+        charges[i].selected = false;
+    }
+}
 
 function selectACharge()
 {
