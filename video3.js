@@ -1,10 +1,12 @@
 let x = 150; 
 
-function setup() {
+function setup() 
+{
     createCanvas(800, 800);
 }
   
-function draw() {
+function draw() 
+{
     background("black")
     fill("white")
     rect(100, 100, 150, 100)

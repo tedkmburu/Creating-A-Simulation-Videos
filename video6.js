@@ -21,6 +21,7 @@ function draw() {
 function mouseClicked()
 {
     deselectCharges()
+    selectACharge()
 }
 
 
