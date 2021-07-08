@@ -7,8 +7,6 @@ let chargeRadius = chargeDiameter / 2;
 
 let fieldLines = [];
 
-let points = []
-
 function setup() 
 {
     createCanvas(innerWidth, innerHeight);
@@ -24,57 +22,24 @@ function draw()
 
     displayGrid()
 
-    for (let i = 0; i < charges.length; i++) 
-    {
-        charges[i].display();
-    }
+    
 
     fieldLines = []   
-    
-    points = [charges[0].position.copy().add(createVector(5,0)) ]
-    for (let i = 0; i < 50; i++) 
-    {
-        let currentPoint = points[points.length - 1];
-        let vectorAtPoint = netForceAtPoint(currentPoint).setMag(10);
-        let nextPoint = currentPoint.copy().add(vectorAtPoint);
-        
-        points.push(nextPoint)
-    }
-    fieldLines.push(new FieldLine(points))
 
-    points = [charges[0].position.copy().add(createVector(-5,0)) ]
-    for (let i = 0; i < 50; i++) 
-    {
-        let currentPoint = points[points.length - 1];
-        let vectorAtPoint = netForceAtPoint(currentPoint).setMag(10);
-        let nextPoint = currentPoint.copy().add(vectorAtPoint);
-        
-        points.push(nextPoint)
-    }
-    fieldLines.push(new FieldLine(points))
 
-    points = [charges[0].position.copy().add(createVector(0,-5)) ]
-    for (let i = 0; i < 50; i++) 
+    for (let a = 0; a < charges.length; a++) 
     {
-        let currentPoint = points[points.length - 1];
-        let vectorAtPoint = netForceAtPoint(currentPoint).setMag(10);
-        let nextPoint = currentPoint.copy().add(vectorAtPoint);
-        
-        points.push(nextPoint)
-    }
-    fieldLines.push(new FieldLine(points))
+        let radius = createVector(0, chargeRadius + 1); 
+        let numberOfLines = charges[a].charge * 4;
+        for (let times = 0; times < numberOfLines; times++) 
+        {
+            radius.rotate(Math.PI * 2 / numberOfLines)
 
-    points = [charges[0].position.copy().add(createVector(0,5)) ]
-    for (let i = 0; i < 50; i++) 
-    {
-        let currentPoint = points[points.length - 1];
-        let vectorAtPoint = netForceAtPoint(currentPoint).setMag(10);
-        let nextPoint = currentPoint.copy().add(vectorAtPoint);
+            let startingPoint = charges[a].position.copy().add(radius)
+            getFieldLinePoints(startingPoint);   
+        }
         
-        points.push(nextPoint)
     }
-    fieldLines.push(new FieldLine(points))
-
     
     
     
@@ -85,14 +50,51 @@ function draw()
         fieldLines[i].display();
     }
 
+    for (let i = 0; i < charges.length; i++) 
+    {
+        charges[i].display();
+    }
+}
+
+function getFieldLinePoints(currentPoint, points, loops)
+{
+    if (points == undefined) 
+    {
+        points = [currentPoint] 
+        loops = 0; 
+    }
+
+    let vectorAtPoint = netForceAtPoint(currentPoint).setMag(10);
+    let nextPoint = currentPoint.copy().add(vectorAtPoint);
 
     
 
+    for (let i = 0; i < charges.length; i++) 
+    {
+        let distanceToCharge = p5.Vector.dist(charges[i].position, currentPoint);
+        
+        if (distanceToCharge < chargeRadius) 
+        {
+            fieldLines.push(new FieldLine(points))
+            return  
+        }
+    }
 
 
-
+    points.push(nextPoint)
+    currentPoint = nextPoint;
     
-    
+    if (loops == 500) 
+    {
+        fieldLines.push(new FieldLine(points))
+        return
+    }
+    else
+    {
+        loops++; 
+        getFieldLinePoints(currentPoint, points, loops)
+    }
+
 }
 
 
@@ -261,28 +263,16 @@ class Charge
         }
         else
         {
-            stroke(0)
+            stroke(0);
             this.slider.style("visibility", "hidden");
         }
 
-        if (this.dragging) 
-        {
-            this.slider.style("visibility", "hidden");
-        }
+        if (this.dragging)  this.slider.style("visibility", "hidden");
 
         let color;
-        if (this.charge < 0)
-        {
-            color = "blue";
-        }
-        else if (this.charge > 0)
-        {
-            color = "red";
-        }
-        else 
-        {
-            color = "grey";
-        }
+        if (this.charge < 0) color = "blue"; 
+        else if (this.charge > 0) color = "red";
+        else   color = "grey";
 
         fill(color);
         ellipse(this.position.x, this.position.y, chargeDiameter, chargeDiameter);
