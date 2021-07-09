@@ -5,7 +5,7 @@ let charges = [];
 let chargeDiameter = 40;
 let chargeRadius = chargeDiameter / 2;
 
-let fieldLines = [];
+let equiLines = [];
 
 function setup() 
 {
@@ -20,34 +20,12 @@ function draw()
 {
     background("black");
 
-    displayGrid();
-
-    
-
-    fieldLines = []   
+    displayGrid()
 
 
-    for (let a = 0; a < charges.length; a++) 
+    for (let i = 0; i < equiLines.length; i++) 
     {
-        let radius = createVector(0, chargeRadius + 1); 
-        let numberOfLines = charges[a].charge * 4;
-        for (let times = 0; times < numberOfLines; times++) 
-        {
-            radius.rotate(Math.PI * 2 / numberOfLines)
-
-            let startingPoint = charges[a].position.copy().add(radius)
-            getFieldLinePoints(startingPoint);   
-        }
-        
-    }
-    
-    
-    
-    
-
-    for (let i = 0; i < fieldLines.length; i++) 
-    {
-        fieldLines[i].display();
+        equiLines[i].display();
     }
 
     for (let i = 0; i < charges.length; i++) 
@@ -56,7 +34,7 @@ function draw()
     }
 }
 
-function getFieldLinePoints(currentPoint, points, loops)
+function getEquiLinePoints(currentPoint, points, loops)
 {
     if (points == undefined) 
     {
@@ -64,35 +42,29 @@ function getFieldLinePoints(currentPoint, points, loops)
         loops = 0; 
     }
 
-    let vectorAtPoint = netForceAtPoint(currentPoint).setMag(10);
-    let nextPoint = currentPoint.copy().add(vectorAtPoint);
-
     
 
-    for (let i = 0; i < charges.length; i++) 
+    let nextPoint;
+    for (let i = 0; i < 10; i++) 
     {
-        let distanceToCharge = p5.Vector.dist(charges[i].position, currentPoint);
+        let vectorAtPoint = netForceAtPoint(currentPoint).setMag(0.125).rotate(Math.PI / 2);
+        nextPoint = currentPoint.copy().add(vectorAtPoint);
+        currentPoint = nextPoint;
         
-        if (distanceToCharge < chargeRadius) 
-        {
-            fieldLines.push(new FieldLine(points))
-            return  
-        }
     }
 
-
     points.push(nextPoint)
-    currentPoint = nextPoint;
     
-    if (loops == 500) 
+    
+    if (loops == 5000) 
     {
-        fieldLines.push(new FieldLine(points))
+        equiLines.push(new EquiLine(points))
         return
     }
     else
     {
         loops++; 
-        getFieldLinePoints(currentPoint, points, loops)
+        getEquiLinePoints(currentPoint, points, loops)
     }
 
 }
@@ -112,6 +84,15 @@ function displayGrid() // displays background grid
         }
     pop();
 }
+
+
+
+function createEquiLine()
+{
+    let mousePosition = createVector(mouseX, mouseY);
+    getEquiLinePoints(mousePosition)
+}
+
 
 
 function netForceAtPoint(position) 
@@ -148,7 +129,10 @@ function netForceAtPoint(position)
 function mouseClicked()
 {
     deselectCharges();
-    selectACharge()
+    if (!selectACharge()) 
+    {
+        createEquiLine();
+    }
 }
 
 
@@ -288,7 +272,7 @@ class Charge
 }
 
 
-class FieldLine
+class EquiLine
 {
     constructor(points)
     {

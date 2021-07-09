@@ -5,8 +5,6 @@ let charges = [];
 let chargeDiameter = 40;
 let chargeRadius = chargeDiameter / 2;
 
-let fieldLines = [];
-
 function setup() 
 {
     createCanvas(innerWidth, innerHeight);
@@ -20,35 +18,35 @@ function draw()
 {
     background("black");
 
-    displayGrid();
+    displayGrid()
 
-    
+    let voltageAccuracy = 15; 
 
-    fieldLines = []   
-
-
-    for (let a = 0; a < charges.length; a++) 
-    {
-        let radius = createVector(0, chargeRadius + 1); 
-        let numberOfLines = charges[a].charge * 4;
-        for (let times = 0; times < numberOfLines; times++) 
+    push()
+        for (let x = 0; x < innerWidth; x+= voltageAccuracy) 
         {
-            radius.rotate(Math.PI * 2 / numberOfLines)
+            for (let y = 0; y < innerHeight; y+= voltageAccuracy) 
+            {
+                noStroke()
 
-            let startingPoint = charges[a].position.copy().add(radius)
-            getFieldLinePoints(startingPoint);   
+                let voltage = voltageAtPoint(createVector(x, y))
+                let intensity = map(Math.abs(voltage), 0, 5475, 0, 255)
+
+               
+
+                let red = 0;
+                let blue = 0;
+                let green = 0;
+                let alpha = intensity * 10;
+
+                if (voltage > 0) red = intensity;
+                else if (voltage < 0) blue = intensity;
+
+                fill(red, green, blue, alpha)
+                rect(x, y, voltageAccuracy, voltageAccuracy)
+            }
         }
-        
-    }
-    
-    
-    
-    
-
-    for (let i = 0; i < fieldLines.length; i++) 
-    {
-        fieldLines[i].display();
-    }
+    pop()
 
     for (let i = 0; i < charges.length; i++) 
     {
@@ -56,46 +54,6 @@ function draw()
     }
 }
 
-function getFieldLinePoints(currentPoint, points, loops)
-{
-    if (points == undefined) 
-    {
-        points = [currentPoint] 
-        loops = 0; 
-    }
-
-    let vectorAtPoint = netForceAtPoint(currentPoint).setMag(10);
-    let nextPoint = currentPoint.copy().add(vectorAtPoint);
-
-    
-
-    for (let i = 0; i < charges.length; i++) 
-    {
-        let distanceToCharge = p5.Vector.dist(charges[i].position, currentPoint);
-        
-        if (distanceToCharge < chargeRadius) 
-        {
-            fieldLines.push(new FieldLine(points))
-            return  
-        }
-    }
-
-
-    points.push(nextPoint)
-    currentPoint = nextPoint;
-    
-    if (loops == 500) 
-    {
-        fieldLines.push(new FieldLine(points))
-        return
-    }
-    else
-    {
-        loops++; 
-        getFieldLinePoints(currentPoint, points, loops)
-    }
-
-}
 
 
 function displayGrid() // displays background grid
@@ -112,6 +70,7 @@ function displayGrid() // displays background grid
         }
     pop();
 }
+
 
 
 function netForceAtPoint(position) 
@@ -142,6 +101,23 @@ function netForceAtPoint(position)
     }
 
     return finalVector;
+}
+
+
+function voltageAtPoint(point)
+{
+  let voltage = 0;
+
+  charges.forEach(charge => {
+    // V = kq / r 
+    let kq = charge.charge * k;
+    let r = p5.Vector.dist(point, charge.position);
+    let v = kq / r;
+
+    voltage += v;
+  })
+
+  return voltage;
 }
 
 
@@ -288,22 +264,3 @@ class Charge
 }
 
 
-class FieldLine
-{
-    constructor(points)
-    {
-        this.points = points
-    }
-
-    display()
-    {
-        noFill();
-        stroke("white");
-        beginShape();
-            for (let i = 0; i < this.points.length; i++) 
-            {
-                vertex(this.points[i].x, this.points[i].y)   
-            }
-        endShape();
-    }
-}
