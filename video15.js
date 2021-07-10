@@ -5,31 +5,6 @@ let charges = [];
 let chargeDiameter = 40;
 let chargeRadius = chargeDiameter / 2;
 
-let backgroundCanvas;
-let foregroundCanvas;
-
-
-const background = canvas => {
-
-    canvas.setup = function()  // This function only runs once when the page first loads. 
-    {
-      canvas.createCanvas(innerWidth, innerHeight); // creates the <canvas> that everything runs on.
-      backgroundCanvas = canvas;
-    }
-  
-    canvas.draw = function() // this function runs every frame. Everything on the background canvas starts here.
-    {  
-      canvas.background(0); // sets the background color to black
-      if (showVoltage){ displayVoltage(); } // if voltage mode is on, show the gradients in the background
-    }
-  
-    canvas.windowResized = function() // inbuilt p5 function. runs everytime the window is resized
-    {
-      canvas.resizeCanvas(innerWidth, innerHeight); // resizes the canvas to fit the new window size
-    }
-  }
-
-
 function setup() 
 {
     createCanvas(innerWidth, innerHeight);
