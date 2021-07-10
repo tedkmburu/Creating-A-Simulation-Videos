@@ -5,9 +5,6 @@ let charges = [];
 let chargeDiameter = 40;
 let chargeRadius = chargeDiameter / 2;
 
-let backgroundCanvas;
-let foregroundCanvas;
-
 
 const background = canvas => {
 
@@ -27,7 +24,49 @@ const background = canvas => {
     {
       canvas.resizeCanvas(innerWidth, innerHeight); // resizes the canvas to fit the new window size
     }
+}
+
+
+
+const foreGround = canvas => {
+  
+    canvas.setup = function()  // This function only runs once when the page first loads. 
+    {
+      canvas.createCanvas(innerWidth, innerHeight); // creates the <canvas> that everything runs on.
+      foreGroundCanvas = canvas;
+  
+      canvas.angleMode(canvas.RADIANS);
+  
+      canvas.textFont(defaultFont); // the default font
+  
+      createSidePanel(); // creates buttons and checkboxes for the side panel
+      createContextMenu(); // creates the buttons for the right click menu
+      fullscreen = false;
+      showPopUp = false;
+      
+      createPreset("single"); // creates what is displayed when the simulation first starts up
+      createDataFromSidePanel();
+  
+      canvas.frameRate(60);  // the simulation will try limit itself to 60 frames per second. If a device can't maintain 60 fps, it will run at whatever it can
+    }
+  
+  
+  
+    canvas.draw = function() // this function runs every frame. Everything on the foreground canvas starts here.
+    {  
+      canvas.clear(); // clears the canvas so that it's transparent
+    }
+  
+    canvas.mouseClicked = function() { whenMouseClicked(); } // inbuilt p5 function. runs everytime any mouse button is clicked
+    canvas.mouseDragged = function() { whenMouseDragged(); } // inbuilt p5 function. runs everytime the mosue is dragged (clicked down and moving)
+    canvas.doubleClicked = function() { whenDoubleClicked(); } // inbuilt p5 function. runs everytime the mouse is double clicked
+    canvas.keyPressed = function() { whenKeyPressed(); } // inbuilt p5 function. runs everytime any keyboard button is clicked
+    canvas.mouseMoved = function() { whenMouseMoved(); } // inbuilt p5 function. runs everytime the mouse moves
+  
+  
   }
+
+
 
 
 function setup() 
