@@ -31,12 +31,12 @@
     <img src="images/edit.png" alt="Logo" width="80" height="80">
   </a>
 
-  <h3 align="center">E field Simulator</h3>
+  <h3 align="center">Creating an E-feild Simulation</h3>
 
   <p align="center">
-    Documentation on how the simulation works so that you can add to it.
+    Videos series on how the simulation works so that you can add to it. All of the videos will be linked below along with a brief description iof each video and additional resources. 
     <br/>
-      <a href="https://icphysweb.z13.web.core.windows.net/">
+      <a href="https://youtube.com/">
       <strong>View Simulation »</strong>
       </a>
     <br/>
