@@ -79,6 +79,18 @@
             <li><a href="#Field-Lines">Voltage</a></li>
         </ul>
     </li>
+    <li><a href="#video1">Video 1</a></li>
+    <li><a href="#video2">Video 2</a></li>
+    <li><a href="#video3">Video 3</a></li>
+    <li><a href="#video4">Video 4</a></li>
+    <li><a href="#video5">Video 5</a></li>
+    <li><a href="#video6">Video 6</a></li>
+    <li><a href="#video7">Video 7</a></li>
+    <li><a href="#video8">Video 8</a></li>
+    <li><a href="#video9">Video 9</a></li>
+    <li><a href="#video10">Video 10</a></li>
+    <li><a href="#video11">Video 11</a></li>
+    <li><a href="#video12">Video 12</a></li>
     <li><a href="#contributing">Contributing</a></li>
     <li><a href="#contact">Contact</a></li>
     <li><a href="#acknowledgements">Acknowledgements</a></li>
