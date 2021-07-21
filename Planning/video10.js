@@ -283,6 +283,7 @@ class FieldVector
 
             translate(this.end.x, this.end.y);
             rotate(this.vector.heading())
+            // (0, 0, -10, -5, -10, 5 )
             triangle(0, 0, -10 * this.arrowScale, -5 * this.arrowScale, -10 * this.arrowScale, 5 * this.arrowScale);
         pop()
     }
